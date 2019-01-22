@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Thread;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Thread\Comment\CommentRequest;
 use App\Http\Controllers\User\UserRepository;
+use App\Models\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ThreadController extends Controller
 {
@@ -95,12 +97,12 @@ class ThreadController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Thread $thread)
     {
-        return view('thread.form')->with(['thread' => $this->thread->find($id)]);
+        return view('thread.form')->with(['thread' => $thread]);
     }
 
     /**
@@ -109,10 +111,12 @@ class ThreadController extends Controller
      * @param  \App\Http\Controllers\Thread\ThreadRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(ThreadRequest $request, $id)
     {
-        $this->thread->update($request, $id);
+        $this->authorize('update', $this->thread->find($id));
+        $this->thread->update($id, $request->all());
         return redirect($this->_redirect);
     }
 
@@ -121,9 +125,11 @@ class ThreadController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy($id)
     {
+        $this->authorize('delete', $this->thread->find($id));
         $this->thread->delete($id);
         return redirect($this->_redirect);
     }

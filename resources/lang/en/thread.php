@@ -10,5 +10,6 @@ return [
     'desc' => 'DESC',
     'all_user' => 'All user',
     'filter_by' => 'Filter by',
-    'reply' => 'Reply'
+    'reply' => 'Reply',
+    'message' => 'You have new reply'
 ];

@@ -40,7 +40,7 @@ class ThreadRepository extends BaseRepository
     public function addComment($id, array $param){
         $param['user_id'] = Auth::user()->id;
         $thread = $this->model->findOrFail($id);
-        SendMessage::dispatch('Send', $thread->user->email);
+        SendMessage::dispatch(__('thread.message'), $thread->user->email);
         return $thread->comments()->create($param);
     }
 
